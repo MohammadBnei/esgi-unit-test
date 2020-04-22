@@ -5,22 +5,18 @@
  * @param {email} email 
  * @param {age} age 
  */
-const createUser = ({
-    name,
-    surname,
-    email,
-    dateOfBirth,
-    password
-} = {}) => {
-    const newUser = {
-        name,
-        surname,
-        email,
-        password, 
-        dateOfBirth: dateOfBirth && new Date(dateOfBirth)
+const createUser = (newUser) => {
+    if (!newUser)
+        newUser = {}
+    const user = {
+        name: newUser.name,
+        email: newUser.email,
+        surname: newUser.surname,
+        password: newUser.password,
+        dateOfBirth: newUser.dateOfBirth,
     }
 
-    newUser.isValid = function () {
+    user.isValid = function () {
         const errors = []
 
         !this.email && errors.push('There is no email ! You need to enter an email address')
@@ -29,27 +25,30 @@ const createUser = ({
         !this.password && errors.push('There is no password ! You need to enter a password')
         !this.dateOfBirth && errors.push('There is no age ! You need to enter an age')
 
-        !(password.length >= 8 && password.length <= 40) && errors.push('You have the wrong number of elements on your password (between 8 and 40)')
+        if (errors.length)
+            return errors
+
+        !(this.password.length >= 8 && this.password.length <= 40) && errors.push('You have the wrong number of elements on your password (between 8 and 40)')
         !validateEmail(this.email) && errors.push('The email is not in the correct format')
-        const ageLimit = (new Date()).now()
-        ageLimit.setFullyear(ageLimit.getFullYear() - 13)
-        this.dateOfBirth <= ageLimit && errors.push('The user is too young ! Must be at least 14')
+        let ageLimit = new Date()
+        ageLimit.setFullYear(ageLimit.getFullYear() - 13)
+        this.dateOfBirth >= ageLimit && errors.push('The user is too young ! Must be at least 14')
 
         return errors
     }
 
-    newUser.todoList = null
+    user.todoList = null
 
-    newUser.isOfAge = function() {
-        const ageLimit = (new Date()).now()
+    user.isOfAge = function() {
+        let ageLimit = new Date()
         ageLimit.setFullyear(ageLimit.getFullYear() - 18)
 
         return this.dateOfBirth >= ageLimit
     }
 
-    Object.freeze(newUser)
+    Object.freeze(user)
 
-    return newUser
+    return user
 
 }
 
