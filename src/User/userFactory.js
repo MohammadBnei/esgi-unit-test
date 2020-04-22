@@ -38,6 +38,7 @@ const createUser = (newUser) => {
     }
 
     user.todoList = null
+    user.id = (new Date()).getTime()
 
     user.isOfAge = function() {
         let ageLimit = new Date()
@@ -46,7 +47,7 @@ const createUser = (newUser) => {
         return this.dateOfBirth >= ageLimit
     }
 
-    Object.freeze(user)
+    Object.seal(user)
 
     return user
 

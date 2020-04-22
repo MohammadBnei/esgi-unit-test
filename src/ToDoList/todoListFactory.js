@@ -6,10 +6,12 @@ const createTodo = ({
     const todo = {
         name: name || '',
         content: content || '',
-        creationDate: (new Date()).now()
+        creationDate: (new Date()).getTime()
     }
 
-    Object.freeze(todo)
+    todo.id = (new Date()).getTime()
+
+    Object.seal(todo)
     
     return todo
 }
@@ -17,51 +19,44 @@ const createTodo = ({
 const createToDoList = () => {
     const todos = []
 
-    todos.reloadTime = false
+    todos.reloadTime = null
 
-    todos.addTodo = function({
-        name,
-        content
-    }) {
-        const todo = createTodo({name, content})
+    todos.addTodo = function(item) {
+
+        this.canAddItem(item)
+        const todo = createTodo(item)
 
         this.push(todo)
-        this.reloadTime = true
-        setTimeout(() => {
-            this.reloadTime = false
-        }, 1.8 * Math.pow(10, 6)) // 30 minutes
+        const now = new Date()
+        this.reloadTime = now.setMinutes((now.getMinutes) + 30)
+
+        return todo
     }
 
-    todos.canAddItem = ({name, content}) => {
+    todos.canAddItem = function(item) {
+        const {name, content} = item
         if (this.length > 10)
-            // throw new Error('There is already 10 Todos')
-            return null
+            throw new Error('There is already 10 Todos')
 
-        if (this.reloadTime)
-            // throw new Error('You have to wait 30 minutes before adding another element')
-            return null
+        if (this.reloadTime && this.reloadTime < (new Date()))
+            throw new Error('You have to wait 30 minutes before adding another element')
 
         
         if (!name || !content)
-            // throw new Error('You need to enter a name and a content')
-            return null
-
-        
+            throw new Error('You need to enter a name and a content')
+            
+        if (content.length > 1000)
+            throw new Error('Your content is too long! Max 1000 characters')
 
         if (this.findIndex(({name: _name}) => _name === name) !== -1)
-            // throw new Error(`The name ${name} is already taken`)
-            return null
+            throw new Error(`The name ${name} is already taken`)
 
-
-        return {name, content}
     }
 
-    Object.freeze(todos)
+    todos.id = (new Date()).getTime()
 
     return todos
 }
 
 
-module.exports = {
-    todoListFactory: createToDoList,
-};
+module.exports = createToDoList

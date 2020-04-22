@@ -1,6 +1,6 @@
 const createUser = require('./userFactory')
 
-describe('Test User factory', () => {
+describe('User factory test suite', () => {
     
     
     test('should return an user with undefined properties', () => {
@@ -17,8 +17,8 @@ describe('Test User factory', () => {
         
         expect(isValid()).toBeInstanceOf(Array)
         expect(isValid()).toHaveLength(5)
-    })
-    ;
+    });
+    
     test('should return a valid user', () => {
         const user = createUser({
             name: 'Hill',

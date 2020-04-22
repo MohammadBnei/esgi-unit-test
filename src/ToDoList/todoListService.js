@@ -1,22 +1,50 @@
-const todoListFactory = require('./todoListFactory')
-const emailService = require('../Email/emailService')
+const todoListService = ({
+    todoListFactory,
+    emailService
+}) => {
+    const lists = []
 
-const todoListService = {
-    createTodoList(user) {     
-        if (user.todoList !== null)
+    function createTodoList(user) {     
+        if (getUserList(user))
             throw new Error('User alreadey have a todo list')
-        
-        user.todoList = todoListFactory()
-    },
 
-    addItemToList(user, item) {
-        if (user.todoList === null)
+        const list = todoListFactory()
+
+        list.userId = user.id
+        lists.push(list)
+    }
+
+    function getUserList(user) {
+        return lists.find(({userId}) => userId === user.id)
+    }
+
+    function addItemToList(user, item) {
+        const list = getUserList(user)
+        if (!list)
             throw new Error('The user must have a todoList')
 
-        if (user.todoList.canAddItem(item)) {
-            user.todoList.addTodo(item)  
-            emailService.sendEmail(user)
-        }
+        list.canAddItem(item)
+        const todo = list.addTodo(item)  
+        emailService.sendEmail(user)
+
+        return todo
+    }
+
+    function getItemFromList(user, id) {
+        const list = getUserList(user)
+        if (!list)
+            throw new Error('The user must have a todoList')
+
+        return list.find(({id: _id}) => id === _id)
+
+    }
+
+    return {
+        lists,
+        createTodoList,
+        getUserList,
+        addItemToList,
+        getItemFromList,
     }
 }
 
