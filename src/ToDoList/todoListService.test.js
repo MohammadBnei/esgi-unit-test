@@ -2,8 +2,7 @@ const TodoListService = require('./todoListService');
 
 const userFactoryMock = jest.fn((name = 'Charles') => ({
     name,
-    todoList: null,
-    isOfAge: true
+    isOfAge: () => true
 }))
 
 const user = userFactoryMock()
