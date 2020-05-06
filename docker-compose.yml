@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  esgi-unit-test:
+    image: esgi-unit-test
+    container_name: node
+    build: .
+    volumes: 
+      - ./:/usr/src/app
+    ports:
+      - 3000:3000
+    stdin_open: true
