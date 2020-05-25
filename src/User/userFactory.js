@@ -8,16 +8,23 @@
 const createUser = (newUser) => {
     if (!newUser)
         newUser = {}
-    const user = {
-        name: newUser.name,
-        email: newUser.email,
-        surname: newUser.surname,
-        password: newUser.password,
-        dateOfBirth: newUser.dateOfBirth,
+    let user = {
+        name: "",
+        email: "",
+        surname: "",
+        password: "",
+        dateOfBirth: "",
     }
 
+    user = Object.assign(user, newUser)
+
+    /**
+     * Returns a list of errors (if any)
+     */
     user.isValid = function () {
         const errors = []
+
+        console.log(this);
 
         !this.email && errors.push('There is no email ! You need to enter an email address')
         !this.name && errors.push('There is no name ! You need to enter a name')
@@ -40,7 +47,7 @@ const createUser = (newUser) => {
     user.todoList = null
     user.id = (new Date()).getTime()
 
-    user.isOfAge = function() {
+    user.isOfAge = function () {
         let ageLimit = new Date()
         ageLimit.setFullyear(ageLimit.getFullYear() - 18)
 
@@ -53,12 +60,10 @@ const createUser = (newUser) => {
 
 }
 
-function validateEmail(email) 
-{
- if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
-  {
-    return (true)
-  }
+function validateEmail(email) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        return (true)
+    }
     return (false)
 }
 

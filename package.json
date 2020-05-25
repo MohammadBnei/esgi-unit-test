@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "nodemon ./src/app.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^25.2.1",
-    "jest": "^25.3.0"
+    "jest": "^25.3.0",
+    "nodemon": "^2.0.3"
   },
   "dependencies": {
     "express": "^4.17.1"

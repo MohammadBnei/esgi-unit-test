@@ -21,13 +21,15 @@ const todoListFactoryMock = jest.fn(() => {
 })
 
 const emailServiceMock = jest.fn(() => ({
-    sendEmail(user) {}
+    sendEmail(user) { }
 }))
 
-const todoListService = TodoListService({
+const lists = []
+
+const todoListService = TodoListService(lists, {
     todoListFactory: todoListFactoryMock,
     emailService: emailServiceMock()
-}) 
+})
 
 describe('TodoList service test suite', () => {
     test('should create a todo list for the user', () => {
@@ -61,7 +63,7 @@ describe('TodoList service test suite', () => {
 
         expect(todo).toMatchObject(item)
     })
-    
-    
+
+
 
 })

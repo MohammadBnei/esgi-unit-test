@@ -1,17 +1,27 @@
 const userFactory = require('./userFactory');
 
-const userService = () => {
-    const users = []
-
+const userService = (users = []) => {
     /**
      * 
      * @param {*} newUser 
      */
     const createUser = (newUser) => {
         const user = userFactory(newUser)
+
+        const errors = user.isValid()
+        if (errors.length) {
+            throw errors.join('\n')
+        }
         users.push(user)
 
         return user
+    }
+
+    /**
+     * Retruns all the users
+     */
+    const getUsers = () => {
+        return users
     }
 
     /**
@@ -19,7 +29,8 @@ const userService = () => {
      * @param {*} id 
      */
     const getUser = (id) => {
-        return users.find(({id: _id}) => _id === id)
+        console.log({ id });
+        return users.find(({ id: _id }) => _id === id) || 'No user found'
     }
     /**
      * 
@@ -27,7 +38,7 @@ const userService = () => {
      * @param {updatedUser} updatedUser 
      */
     const updateUser = (id, updatedUser) => {
-        const index = users.findIndex(({id: _id}) => _id === id)
+        const index = users.findIndex(({ id: _id }) => _id === id)
 
         if (index === -1 || updatedUser.isValid().length)
             throw new Error('id not found')
@@ -35,21 +46,21 @@ const userService = () => {
         users.splice(index, 1, updatedUser)
         return users[index]
     }
-    
+
     /**
      * 
      * @param {*} id 
      */
     const deleteUser = (id) => {
-        const index = users.findIndex(({id: _id}) => _id === id)
-        
+        const index = users.findIndex(({ id: _id }) => _id === id)
+
         users.splice(index, 1)
         return 'Ok'
     }
 
     return {
-        users,
         createUser,
+        getUsers,
         getUser,
         updateUser,
         deleteUser
